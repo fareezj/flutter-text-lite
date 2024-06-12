@@ -18,34 +18,17 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final TextEditingController _connectionController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
-  WebSocketChannel? channel;
-
-  void initWebsocket(String userConn) async {
-    channel = WebSocketChannel.connect(Uri.parse(
-        'wss://1mh9nr345k.execute-api.us-west-2.amazonaws.com/production/?userId=$userConn'));
-    await channel?.ready;
-  }
-
-  void _sendMessage(
-      {required String connectionId, required String message}) async {
-    print(
-        'Sending: {"action": "sendPrivate", "recepientConnectionId": "$connectionId", "message": "$message" }');
-    channel?.sink.add(
-        '{"action": "sendPrivate", "recepientConnectionId": "$connectionId", "message": "$message" }');
-  }
 
   @override
   void initState() {
     super.initState();
+    var viewModel = Provider.of<ChatViewModel>(context, listen: false);
+    viewModel.getAppConfig(widget.username);
   }
 
   @override
   Widget build(BuildContext context) {
-    var viewModel = Provider.of<ChatViewModel>(context);
-    viewModel.getAppConfig();
     return Scaffold(
       body: SafeArea(
         child: Consumer<ChatViewModel>(
@@ -58,20 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: const InputDecoration(labelText: 'Message'),
                   ),
                 ),
-                if (value.userId != null) ...[
-                  ElevatedButton(
-                    onPressed: () async => initWebsocket(value.userId!),
-                    child: const Text('Init websocket'),
-                  ),
-                ],
-                ElevatedButton(
-                  onPressed: () async => viewModel.getUserDetails(
-                      UserDetailsReqBody(username: widget.username)),
-                  child: const Text('Get Connection id'),
-                ),
+                Text(value.recepientConnectionId ?? ''),
                 if (value.recepientConnectionId != null) ...[
                   ElevatedButton(
-                    onPressed: () async => _sendMessage(
+                    onPressed: () async => value.sendMessage(
                       connectionId: value.recepientConnectionId!,
                       message: _messageController.text,
                     ),
@@ -80,8 +53,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
                 Text(value.userId ?? ''),
                 StreamBuilder(
-                  stream: channel?.stream,
+                  stream: value.channel?.stream,
                   builder: (context, snapshot) {
+                    var result = jsonDecode(snapshot.data);
+                    if (result['type'] == 'connectionIdUpdate') {
+                      print(result['connectionId']);
+                      value.recepientConnectionId = result['connectionId'];
+                    }
                     return Text(snapshot.hasData ? snapshot.data : '');
                   },
                 )
@@ -91,32 +69,5 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> getUserDetails(String username) async {
-    // Define the URL
-    final url = Uri.parse(
-        'https://dfrzbwjbf6.execute-api.us-west-2.amazonaws.com/dev/main/get-user-details');
-
-    final Map<String, dynamic> requestBody = {'username': username};
-
-    // Send the GET request
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBody),
-    );
-
-    // Check if the request was successful
-    if (response.statusCode == 200) {
-      // Parse the JSON response
-      final responseData = json.decode(response.body);
-      print('Response data: $responseData');
-    } else {
-      // Handle the error
-      print('Request failed with status: ${response.statusCode}');
-    }
   }
 }
