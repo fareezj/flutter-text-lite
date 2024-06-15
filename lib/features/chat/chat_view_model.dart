@@ -18,8 +18,9 @@ class ChatViewModel extends ChangeNotifier {
 
   Future<void> getAppConfig(String recepientUsername) async {
     try {
-      AppConfigModel result = await appConfigRepository.getAppConfig();
-      userId = result.userId;
+      channel = null;
+      AppConfigModel? result = await appConfigRepository.getAppConfig();
+      userId = result?.userId;
       notifyListeners();
       if (userId != null) {
         await initWebSocket(userId!, recepientUsername);

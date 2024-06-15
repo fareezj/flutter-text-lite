@@ -3,6 +3,7 @@ import 'package:text_lite/features/auth/sign_in_screen.dart';
 import 'package:text_lite/features/auth/sign_up_screen.dart';
 import 'package:text_lite/features/chat/chat_screen.dart';
 import 'package:text_lite/features/home/home_screen.dart';
+import 'package:text_lite/features/settings/settings_screen.dart';
 
 class RouterGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,6 +12,8 @@ class RouterGenerator {
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case '/sign-in':
         return MaterialPageRoute(builder: (_) => const SignInScreen());
+      case '/settings':
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case '/chat':
         final args = settings.arguments as ChatScreenArguments;
         return MaterialPageRoute(

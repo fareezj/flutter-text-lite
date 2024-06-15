@@ -19,12 +19,18 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+  ChatViewModel? chatViewModel;
 
   @override
   void initState() {
     super.initState();
-    var viewModel = Provider.of<ChatViewModel>(context, listen: false);
-    viewModel.getAppConfig(widget.username);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
+    chatViewModel?.getAppConfig(widget.username);
   }
 
   @override
@@ -33,37 +39,43 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Consumer<ChatViewModel>(
           builder: (context, value, child) {
-            return Column(
-              children: [
-                Form(
-                  child: TextFormField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(labelText: 'Message'),
-                  ),
-                ),
-                Text(value.recepientConnectionId ?? ''),
-                if (value.recepientConnectionId != null) ...[
-                  ElevatedButton(
-                    onPressed: () async => value.sendMessage(
-                      connectionId: value.recepientConnectionId!,
-                      message: _messageController.text,
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Form(
+                    child: TextFormField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(labelText: 'Message'),
                     ),
-                    child: const Text('Send message'),
                   ),
+                  Text(value.recepientConnectionId ?? ''),
+                  if (value.recepientConnectionId != null) ...[
+                    ElevatedButton(
+                      onPressed: () async => value.sendMessage(
+                        connectionId: value.recepientConnectionId!,
+                        message: _messageController.text,
+                      ),
+                      child: const Text('Send message'),
+                    ),
+                  ],
+                  Text(value.userId ?? ''),
+                  StreamBuilder(
+                    stream: value.channel?.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var result = jsonDecode(snapshot.data);
+                        if (result['type'] == 'connectionIdUpdate') {
+                          print(result['connectionId']);
+                          value.recepientConnectionId = result['connectionId'];
+                        }
+                        return Text(snapshot.hasData ? snapshot.data : '');
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  )
                 ],
-                Text(value.userId ?? ''),
-                StreamBuilder(
-                  stream: value.channel?.stream,
-                  builder: (context, snapshot) {
-                    var result = jsonDecode(snapshot.data);
-                    if (result['type'] == 'connectionIdUpdate') {
-                      print(result['connectionId']);
-                      value.recepientConnectionId = result['connectionId'];
-                    }
-                    return Text(snapshot.hasData ? snapshot.data : '');
-                  },
-                )
-              ],
+              ),
             );
           },
         ),

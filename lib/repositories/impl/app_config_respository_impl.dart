@@ -17,7 +17,7 @@ class AppConfigRepositoryImpl extends AppConfigRepository {
   }
 
   @override
-  Future<AppConfigModel> getAppConfig() async {
+  Future<AppConfigModel?> getAppConfig() async {
     try {
       return await appConfigDao.getAppConfig();
     } catch (e) {

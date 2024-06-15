@@ -17,17 +17,19 @@ class MainViewModel extends ChangeNotifier {
 
   Future<void> checkLoginStatus() async {
     try {
-      AppConfigModel userAppConfig = await appConfigRepository.getAppConfig();
-      var result = await authRepository.refreshToken(
-          RefreshTokenModel(refreshToken: userAppConfig.refreshToken));
-      if (result.statusCode == 200) {
-        userAppConfig.isLoggedIn = 1;
-        isLoggedIn = true;
-        notifyListeners();
+      AppConfigModel? userAppConfig = await appConfigRepository.getAppConfig();
+      if (userAppConfig != null) {
+        var result = await authRepository.refreshToken(
+            RefreshTokenModel(refreshToken: userAppConfig.refreshToken));
+        if (result.statusCode == 200) {
+          userAppConfig.isLoggedIn = 1;
+          isLoggedIn = true;
+          notifyListeners();
+        }
+        logger.i(result);
+        userAppConfig.idToken = result.idToken;
+        appConfigRepository.insertAppConfig(userAppConfig);
       }
-      logger.i(result);
-      userAppConfig.idToken = result.idToken;
-      appConfigRepository.insertAppConfig(userAppConfig);
     } catch (e, a) {
       throw Exception(a);
     }
@@ -35,8 +37,8 @@ class MainViewModel extends ChangeNotifier {
 
   Future<void> getAppConfig() async {
     try {
-      AppConfigModel result = await appConfigRepository.getAppConfig();
-      isLoggedIn = result.isLoggedIn == 1;
+      AppConfigModel? result = await appConfigRepository.getAppConfig();
+      isLoggedIn = result?.isLoggedIn == 1;
       notifyListeners();
     } catch (e) {
       throw Exception(e);

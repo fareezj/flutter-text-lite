@@ -8,8 +8,6 @@ import 'package:text_lite/features/chat/chat_view_model.dart';
 import 'package:text_lite/features/home/home_screen.dart';
 import 'package:text_lite/features/home/home_view_model.dart';
 import 'package:text_lite/main_view_model.dart';
-import 'package:text_lite/models/app_config/app_config_model.dart';
-import 'package:text_lite/models/refresh_token/refresh_token_models.dart';
 import 'package:text_lite/repositories/app_config_repository.dart';
 import 'package:text_lite/repositories/auth_repository.dart';
 import 'package:text_lite/repositories/home_repository.dart';
@@ -18,6 +16,7 @@ import 'package:text_lite/repositories/impl/auth_repository_impl.dart';
 import 'package:text_lite/repositories/impl/home_repository_impl.dart';
 import 'package:text_lite/router/router_generator.dart';
 import 'package:text_lite/services/rest/rest_service.dart';
+import 'package:text_lite/services/websocket/websocket_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

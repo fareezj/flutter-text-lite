@@ -16,9 +16,10 @@ class AppConfigDao {
     }
   }
 
-  Future<AppConfigModel> getAppConfig() async {
+  Future<AppConfigModel?> getAppConfig() async {
     try {
       var result = await appDatabase.db!.rawQuery('SELECT * FROM AppConfig');
+      if (result.isEmpty) return null;
       return AppConfigModel(
           userId: result[0]['userId'].toString(),
           username: result[0]['username'].toString(),
