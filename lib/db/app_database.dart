@@ -25,5 +25,13 @@ class AppDatabase {
   void _onCreate(Database db, int version) async {
     await db.execute(
         'CREATE TABLE AppConfig(userId TEXT PRIMARY KEY, username TEXT, email TEXT, idToken TEXT, refreshToken TEXT, isLoggedIn INTEGER)');
+
+    await db.execute(
+        'CREATE TABLE Friends (userId TEXT PRIMARY KEY, username TEXT, email TEXT, connectionId TEXT, lastWebsocketUpdate TEXT)');
+    
+    await db.execute(
+        'CREATE TABLE Chats (chatListId TEXT PRIMARY KEY, userIds TEXT, recepientUsername TEXT)'
+    )
+
   }
 }

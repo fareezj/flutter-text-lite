@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:text_lite/db/app_database.dart';
 import 'package:text_lite/db/dao/app_config_dao.dart';
+import 'package:text_lite/db/dao/friend_dao.dart';
 import 'package:text_lite/features/auth/sign_in_screen.dart';
 import 'package:text_lite/features/auth/auth_view_model.dart';
 import 'package:text_lite/features/chat/chat_view_model.dart';
@@ -10,26 +11,36 @@ import 'package:text_lite/features/home/home_view_model.dart';
 import 'package:text_lite/main_view_model.dart';
 import 'package:text_lite/repositories/app_config_repository.dart';
 import 'package:text_lite/repositories/auth_repository.dart';
+import 'package:text_lite/repositories/friends_repository.dart';
 import 'package:text_lite/repositories/home_repository.dart';
 import 'package:text_lite/repositories/impl/app_config_respository_impl.dart';
 import 'package:text_lite/repositories/impl/auth_repository_impl.dart';
+import 'package:text_lite/repositories/impl/friends_repository_impl.dart';
 import 'package:text_lite/repositories/impl/home_repository_impl.dart';
 import 'package:text_lite/router/router_generator.dart';
 import 'package:text_lite/services/rest/rest_service.dart';
+import 'package:text_lite/services/sharedPrefs/shared_prefs_service.dart';
 import 'package:text_lite/services/websocket/websocket_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppDatabase.instance.getDb();
   await RestService.instance.initDio();
+  await SharedPrefsService.instance.initSharedPrefs();
   runApp(MultiProvider(
     providers: [
       Provider<AppDatabase>(create: (context) => AppDatabase.instance),
       Provider<RestService>(create: (context) => RestService.instance),
+      Provider<SharedPrefsService>(
+          create: (context) => SharedPrefsService.instance),
       Provider<AppConfigRepository>(
         create: (context) => AppConfigRepositoryImpl(
           appConfigDao: AppConfigDao(AppDatabase.instance),
         ),
+      ),
+      Provider<FriendsRepository>(
+        create: (context) =>
+            FriendsRepositoryImpl(FriendDao(AppDatabase.instance)),
       ),
       Provider<AuthRepository>(
           create: (context) =>
@@ -61,9 +72,12 @@ void main() async {
       ChangeNotifierProvider(
         create: (context) => ChatViewModel(
           homeRepository: HomeRepositoryImpl(restService: RestService.instance),
+          sharedPrefsService: SharedPrefsService.instance,
           appConfigRepository: AppConfigRepositoryImpl(
             appConfigDao: AppConfigDao(AppDatabase.instance),
           ),
+          friendsRepository:
+              FriendsRepositoryImpl(FriendDao(AppDatabase.instance)),
         ),
       )
     ],

@@ -9,7 +9,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
-  final String username;
+  final String username; // Username of receipient
 
   const ChatScreen({super.key, required this.username});
 
@@ -49,15 +49,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   Text(value.recepientConnectionId ?? ''),
-                  if (value.recepientConnectionId != null) ...[
-                    ElevatedButton(
-                      onPressed: () async => value.sendMessage(
-                        connectionId: value.recepientConnectionId!,
-                        message: _messageController.text,
-                      ),
-                      child: const Text('Send message'),
+                  ElevatedButton(
+                    onPressed: () async => value.sendMessage(
+                      connectionId: value.recepientConnectionId!,
+                      message: _messageController.text,
                     ),
-                  ],
+                    child: const Text('Send message'),
+                  ),
                   Text(value.userId ?? ''),
                   StreamBuilder(
                     stream: value.channel?.stream,
@@ -65,8 +63,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (snapshot.hasData) {
                         var result = jsonDecode(snapshot.data);
                         if (result['type'] == 'connectionIdUpdate') {
-                          print(result['connectionId']);
                           value.recepientConnectionId = result['connectionId'];
+                          value.updateFriendConnectionId(
+                            username: widget.username,
+                            connectionId: result['connectionId'],
+                          );
                         }
                         return Text(snapshot.hasData ? snapshot.data : '');
                       } else {
