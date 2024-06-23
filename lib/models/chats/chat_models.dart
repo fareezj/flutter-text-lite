@@ -5,10 +5,13 @@ part 'chat_models.g.dart';
 
 @freezed
 class ChatListModel with _$ChatListModel {
-  const factory ChatListModel(
-      {required String chatListId,
-      required List<String> userIds,
-      required List<ChatModel> chatList}) = _ChatListModel;
+  const factory ChatListModel({
+    required String chatListId,
+    required String recepientId,
+    required String recepientUsername,
+    required String senderId,
+    required String senderUsername,
+  }) = _ChatListModel;
 
   factory ChatListModel.fromJson(Map<String, Object?> json) =>
       _$ChatListModelFromJson(json);
@@ -17,7 +20,8 @@ class ChatListModel with _$ChatListModel {
 @unfreezed
 class ChatModel with _$ChatModel {
   factory ChatModel({
-    required String id,
+    required String chatId,
+    required String chatListId,
     required String recepientId,
     required String recepientUsername,
     required String senderId,

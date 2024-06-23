@@ -28,10 +28,11 @@ class AppDatabase {
 
     await db.execute(
         'CREATE TABLE Friends (userId TEXT PRIMARY KEY, username TEXT, email TEXT, connectionId TEXT, lastWebsocketUpdate TEXT)');
-    
-    await db.execute(
-        'CREATE TABLE Chats (chatListId TEXT PRIMARY KEY, userIds TEXT, recepientUsername TEXT)'
-    )
 
+    await db.execute(
+        'CREATE TABLE ChatList (chatListId TEXT PRIMARY KEY, recepientId TEXT, recepientUsername TEXT, senderId TEXT, senderUsername TEXT)');
+
+    await db.execute(
+        'CREATE TABLE Chats (chatId TEXT PRIMARY KEY, chatListId TEXT, recepientId TEXT, recepientUsername TEXT, senderId TEXT, senderUsername TEXT, mode TEXT, status TEXT, message TEXT, dateCreated TEXT, FOREIGN KEY (chatListId) REFERENCES ChatList (chatListId))');
   }
 }

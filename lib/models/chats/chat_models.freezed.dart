@@ -21,8 +21,10 @@ ChatListModel _$ChatListModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChatListModel {
   String get chatListId => throw _privateConstructorUsedError;
-  List<String> get userIds => throw _privateConstructorUsedError;
-  List<ChatModel> get chatList => throw _privateConstructorUsedError;
+  String get recepientId => throw _privateConstructorUsedError;
+  String get recepientUsername => throw _privateConstructorUsedError;
+  String get senderId => throw _privateConstructorUsedError;
+  String get senderUsername => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +39,11 @@ abstract class $ChatListModelCopyWith<$Res> {
       _$ChatListModelCopyWithImpl<$Res, ChatListModel>;
   @useResult
   $Res call(
-      {String chatListId, List<String> userIds, List<ChatModel> chatList});
+      {String chatListId,
+      String recepientId,
+      String recepientUsername,
+      String senderId,
+      String senderUsername});
 }
 
 /// @nodoc
@@ -54,22 +60,32 @@ class _$ChatListModelCopyWithImpl<$Res, $Val extends ChatListModel>
   @override
   $Res call({
     Object? chatListId = null,
-    Object? userIds = null,
-    Object? chatList = null,
+    Object? recepientId = null,
+    Object? recepientUsername = null,
+    Object? senderId = null,
+    Object? senderUsername = null,
   }) {
     return _then(_value.copyWith(
       chatListId: null == chatListId
           ? _value.chatListId
           : chatListId // ignore: cast_nullable_to_non_nullable
               as String,
-      userIds: null == userIds
-          ? _value.userIds
-          : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      chatList: null == chatList
-          ? _value.chatList
-          : chatList // ignore: cast_nullable_to_non_nullable
-              as List<ChatModel>,
+      recepientId: null == recepientId
+          ? _value.recepientId
+          : recepientId // ignore: cast_nullable_to_non_nullable
+              as String,
+      recepientUsername: null == recepientUsername
+          ? _value.recepientUsername
+          : recepientUsername // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderId: null == senderId
+          ? _value.senderId
+          : senderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderUsername: null == senderUsername
+          ? _value.senderUsername
+          : senderUsername // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -83,7 +99,11 @@ abstract class _$$ChatListModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String chatListId, List<String> userIds, List<ChatModel> chatList});
+      {String chatListId,
+      String recepientId,
+      String recepientUsername,
+      String senderId,
+      String senderUsername});
 }
 
 /// @nodoc
@@ -98,22 +118,32 @@ class __$$ChatListModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? chatListId = null,
-    Object? userIds = null,
-    Object? chatList = null,
+    Object? recepientId = null,
+    Object? recepientUsername = null,
+    Object? senderId = null,
+    Object? senderUsername = null,
   }) {
     return _then(_$ChatListModelImpl(
       chatListId: null == chatListId
           ? _value.chatListId
           : chatListId // ignore: cast_nullable_to_non_nullable
               as String,
-      userIds: null == userIds
-          ? _value._userIds
-          : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      chatList: null == chatList
-          ? _value._chatList
-          : chatList // ignore: cast_nullable_to_non_nullable
-              as List<ChatModel>,
+      recepientId: null == recepientId
+          ? _value.recepientId
+          : recepientId // ignore: cast_nullable_to_non_nullable
+              as String,
+      recepientUsername: null == recepientUsername
+          ? _value.recepientUsername
+          : recepientUsername // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderId: null == senderId
+          ? _value.senderId
+          : senderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderUsername: null == senderUsername
+          ? _value.senderUsername
+          : senderUsername // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -123,35 +153,28 @@ class __$$ChatListModelImplCopyWithImpl<$Res>
 class _$ChatListModelImpl implements _ChatListModel {
   const _$ChatListModelImpl(
       {required this.chatListId,
-      required final List<String> userIds,
-      required final List<ChatModel> chatList})
-      : _userIds = userIds,
-        _chatList = chatList;
+      required this.recepientId,
+      required this.recepientUsername,
+      required this.senderId,
+      required this.senderUsername});
 
   factory _$ChatListModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatListModelImplFromJson(json);
 
   @override
   final String chatListId;
-  final List<String> _userIds;
   @override
-  List<String> get userIds {
-    if (_userIds is EqualUnmodifiableListView) return _userIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_userIds);
-  }
-
-  final List<ChatModel> _chatList;
+  final String recepientId;
   @override
-  List<ChatModel> get chatList {
-    if (_chatList is EqualUnmodifiableListView) return _chatList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_chatList);
-  }
+  final String recepientUsername;
+  @override
+  final String senderId;
+  @override
+  final String senderUsername;
 
   @override
   String toString() {
-    return 'ChatListModel(chatListId: $chatListId, userIds: $userIds, chatList: $chatList)';
+    return 'ChatListModel(chatListId: $chatListId, recepientId: $recepientId, recepientUsername: $recepientUsername, senderId: $senderId, senderUsername: $senderUsername)';
   }
 
   @override
@@ -161,17 +184,20 @@ class _$ChatListModelImpl implements _ChatListModel {
             other is _$ChatListModelImpl &&
             (identical(other.chatListId, chatListId) ||
                 other.chatListId == chatListId) &&
-            const DeepCollectionEquality().equals(other._userIds, _userIds) &&
-            const DeepCollectionEquality().equals(other._chatList, _chatList));
+            (identical(other.recepientId, recepientId) ||
+                other.recepientId == recepientId) &&
+            (identical(other.recepientUsername, recepientUsername) ||
+                other.recepientUsername == recepientUsername) &&
+            (identical(other.senderId, senderId) ||
+                other.senderId == senderId) &&
+            (identical(other.senderUsername, senderUsername) ||
+                other.senderUsername == senderUsername));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      chatListId,
-      const DeepCollectionEquality().hash(_userIds),
-      const DeepCollectionEquality().hash(_chatList));
+  int get hashCode => Object.hash(runtimeType, chatListId, recepientId,
+      recepientUsername, senderId, senderUsername);
 
   @JsonKey(ignore: true)
   @override
@@ -190,8 +216,10 @@ class _$ChatListModelImpl implements _ChatListModel {
 abstract class _ChatListModel implements ChatListModel {
   const factory _ChatListModel(
       {required final String chatListId,
-      required final List<String> userIds,
-      required final List<ChatModel> chatList}) = _$ChatListModelImpl;
+      required final String recepientId,
+      required final String recepientUsername,
+      required final String senderId,
+      required final String senderUsername}) = _$ChatListModelImpl;
 
   factory _ChatListModel.fromJson(Map<String, dynamic> json) =
       _$ChatListModelImpl.fromJson;
@@ -199,9 +227,13 @@ abstract class _ChatListModel implements ChatListModel {
   @override
   String get chatListId;
   @override
-  List<String> get userIds;
+  String get recepientId;
   @override
-  List<ChatModel> get chatList;
+  String get recepientUsername;
+  @override
+  String get senderId;
+  @override
+  String get senderUsername;
   @override
   @JsonKey(ignore: true)
   _$$ChatListModelImplCopyWith<_$ChatListModelImpl> get copyWith =>
@@ -214,8 +246,10 @@ ChatModel _$ChatModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatModel {
-  String get id => throw _privateConstructorUsedError;
-  set id(String value) => throw _privateConstructorUsedError;
+  String get chatId => throw _privateConstructorUsedError;
+  set chatId(String value) => throw _privateConstructorUsedError;
+  String get chatListId => throw _privateConstructorUsedError;
+  set chatListId(String value) => throw _privateConstructorUsedError;
   String get recepientId => throw _privateConstructorUsedError;
   set recepientId(String value) => throw _privateConstructorUsedError;
   String get recepientUsername => throw _privateConstructorUsedError;
@@ -245,7 +279,8 @@ abstract class $ChatModelCopyWith<$Res> {
       _$ChatModelCopyWithImpl<$Res, ChatModel>;
   @useResult
   $Res call(
-      {String id,
+      {String chatId,
+      String chatListId,
       String recepientId,
       String recepientUsername,
       String senderId,
@@ -269,7 +304,8 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? chatId = null,
+    Object? chatListId = null,
     Object? recepientId = null,
     Object? recepientUsername = null,
     Object? senderId = null,
@@ -280,9 +316,13 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
     Object? dateCreated = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      chatListId: null == chatListId
+          ? _value.chatListId
+          : chatListId // ignore: cast_nullable_to_non_nullable
               as String,
       recepientId: null == recepientId
           ? _value.recepientId
@@ -329,7 +369,8 @@ abstract class _$$ChatModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {String chatId,
+      String chatListId,
       String recepientId,
       String recepientUsername,
       String senderId,
@@ -351,7 +392,8 @@ class __$$ChatModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? chatId = null,
+    Object? chatListId = null,
     Object? recepientId = null,
     Object? recepientUsername = null,
     Object? senderId = null,
@@ -362,9 +404,13 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     Object? dateCreated = null,
   }) {
     return _then(_$ChatModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      chatListId: null == chatListId
+          ? _value.chatListId
+          : chatListId // ignore: cast_nullable_to_non_nullable
               as String,
       recepientId: null == recepientId
           ? _value.recepientId
@@ -406,7 +452,8 @@ class __$$ChatModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ChatModelImpl implements _ChatModel {
   _$ChatModelImpl(
-      {required this.id,
+      {required this.chatId,
+      required this.chatListId,
       required this.recepientId,
       required this.recepientUsername,
       required this.senderId,
@@ -420,7 +467,9 @@ class _$ChatModelImpl implements _ChatModel {
       _$$ChatModelImplFromJson(json);
 
   @override
-  String id;
+  String chatId;
+  @override
+  String chatListId;
   @override
   String recepientId;
   @override
@@ -440,7 +489,7 @@ class _$ChatModelImpl implements _ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel(id: $id, recepientId: $recepientId, recepientUsername: $recepientUsername, senderId: $senderId, senderUsername: $senderUsername, mode: $mode, status: $status, message: $message, dateCreated: $dateCreated)';
+    return 'ChatModel(chatId: $chatId, chatListId: $chatListId, recepientId: $recepientId, recepientUsername: $recepientUsername, senderId: $senderId, senderUsername: $senderUsername, mode: $mode, status: $status, message: $message, dateCreated: $dateCreated)';
   }
 
   @JsonKey(ignore: true)
@@ -459,7 +508,8 @@ class _$ChatModelImpl implements _ChatModel {
 
 abstract class _ChatModel implements ChatModel {
   factory _ChatModel(
-      {required String id,
+      {required String chatId,
+      required String chatListId,
       required String recepientId,
       required String recepientUsername,
       required String senderId,
@@ -473,8 +523,11 @@ abstract class _ChatModel implements ChatModel {
       _$ChatModelImpl.fromJson;
 
   @override
-  String get id;
-  set id(String value);
+  String get chatId;
+  set chatId(String value);
+  @override
+  String get chatListId;
+  set chatListId(String value);
   @override
   String get recepientId;
   set recepientId(String value);

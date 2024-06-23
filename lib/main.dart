@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:text_lite/db/app_database.dart';
 import 'package:text_lite/db/dao/app_config_dao.dart';
+import 'package:text_lite/db/dao/chat_dao.dart';
 import 'package:text_lite/db/dao/friend_dao.dart';
 import 'package:text_lite/features/auth/sign_in_screen.dart';
 import 'package:text_lite/features/auth/auth_view_model.dart';
@@ -11,10 +12,12 @@ import 'package:text_lite/features/home/home_view_model.dart';
 import 'package:text_lite/main_view_model.dart';
 import 'package:text_lite/repositories/app_config_repository.dart';
 import 'package:text_lite/repositories/auth_repository.dart';
+import 'package:text_lite/repositories/chat_repository.dart';
 import 'package:text_lite/repositories/friends_repository.dart';
 import 'package:text_lite/repositories/home_repository.dart';
 import 'package:text_lite/repositories/impl/app_config_respository_impl.dart';
 import 'package:text_lite/repositories/impl/auth_repository_impl.dart';
+import 'package:text_lite/repositories/impl/chat_repository_impl.dart';
 import 'package:text_lite/repositories/impl/friends_repository_impl.dart';
 import 'package:text_lite/repositories/impl/home_repository_impl.dart';
 import 'package:text_lite/router/router_generator.dart';
@@ -48,6 +51,11 @@ void main() async {
       Provider<HomeRepository>(
           create: (context) =>
               HomeRepositoryImpl(restService: RestService.instance)),
+      Provider<ChatRepository>(
+        create: (context) => ChatRepositoryImpl(
+          chatDao: ChatDao(AppDatabase.instance),
+        ),
+      ),
       ChangeNotifierProvider(
         create: (context) => MainViewModel(
           authRepository: AuthRepositoryImpl(restService: RestService.instance),
@@ -78,6 +86,8 @@ void main() async {
           ),
           friendsRepository:
               FriendsRepositoryImpl(FriendDao(AppDatabase.instance)),
+          chatRepository:
+              ChatRepositoryImpl(chatDao: ChatDao(AppDatabase.instance)),
         ),
       )
     ],

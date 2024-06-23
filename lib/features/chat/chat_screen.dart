@@ -31,6 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.didChangeDependencies();
     chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
     chatViewModel?.getAppConfig(widget.username);
+    chatViewModel?.retrieveChat(recepientUsername: widget.username);
   }
 
   @override
@@ -49,14 +50,29 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   Text(value.recepientConnectionId ?? ''),
-                  ElevatedButton(
-                    onPressed: () async => value.sendMessage(
-                      connectionId: value.recepientConnectionId!,
-                      message: _messageController.text,
+                  if (value.chatListId != null) ...[
+                    Text('Chat List Id: ${value.chatListId}'),
+                    ElevatedButton(
+                      onPressed: () async => value.sendMessage(
+                          connectionId: value.recepientConnectionId!,
+                          message: _messageController.text,
+                          chatListId: value.chatListId!,
+                          recepientId: value.friendRecepientModel!.userId,
+                          recepientUsername:
+                              value.friendRecepientModel!.username,
+                          senderId: value.senderUserId!,
+                          senderUsername: value.senderUsername!,
+                          mode: "SENDER",
+                          status: "SENT"),
+                      child: const Text('Send message'),
                     ),
-                    child: const Text('Send message'),
-                  ),
-                  Text(value.userId ?? ''),
+                  ],
+
+                  // ElevatedButton(
+                  //     onPressed: () => value.retrieveChat(
+                  //         recepientUsername: widget.username),
+                  //     child: const Text('Test retrieve')),
+                  Text(value.senderUserId ?? ''),
                   StreamBuilder(
                     stream: value.channel?.stream,
                     builder: (context, snapshot) {
@@ -74,7 +90,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         return const SizedBox();
                       }
                     },
-                  )
+                  ),
+                  if (value.retrievedChatList != null) ...[
+                    Column(
+                      children: value.retrievedChatList!.map((val) {
+                        return Text(val.message);
+                      }).toList(),
+                    )
+                  ]
                 ],
               ),
             );
