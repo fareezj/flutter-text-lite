@@ -67,17 +67,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: const Text('Send message'),
                     ),
                   ],
-
-                  // ElevatedButton(
-                  //     onPressed: () => value.retrieveChat(
-                  //         recepientUsername: widget.username),
-                  //     child: const Text('Test retrieve')),
                   Text(value.senderUserId ?? ''),
                   StreamBuilder(
                     stream: value.channel?.stream,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         var result = jsonDecode(snapshot.data);
+                        print(result.toString());
+                        print(snapshot.data);
                         if (result['type'] == 'connectionIdUpdate') {
                           value.recepientConnectionId = result['connectionId'];
                           value.updateFriendConnectionId(
@@ -85,7 +82,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             connectionId: result['connectionId'],
                           );
                         }
-                        return Text(snapshot.hasData ? snapshot.data : '');
+                        if (result['privateMessage'] != null) {
+                          return Text(snapshot.hasData
+                              ? 'Incoming: ' + snapshot.data
+                              : '');
+                        }
+                        return const Text('connected!');
                       } else {
                         return const SizedBox();
                       }
