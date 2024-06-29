@@ -117,41 +117,50 @@ class ChatViewModel extends ChangeNotifier {
     }
   }
 
-  void sendMessage(
-      {required String connectionId,
-      required String message,
-      required String chatListId,
-      required String recepientId,
-      required String recepientUsername,
-      required String senderId,
-      required String senderUsername,
-      required String mode,
-      required String status}) async {
-    print(
-        'Sending: {"action": "sendPrivate", "recepientConnectionId": "$connectionId", "message": "$message" }');
-    channel?.sink.add(
-        '{"action": "sendPrivate", "recepientConnectionId": "$connectionId", "message": "$message" }');
+  Future<void> messageTransmission({
+    String? chatId,
+    required String connectionId,
+    required String message,
+    required String chatListId,
+    required String recepientId,
+    required String recepientUsername,
+    required String senderId,
+    required String senderUsername,
+    required String mode,
+    required String status,
+  }) async {
+    var uuid = const Uuid();
+    var assignedChatId = chatId ?? uuid.v4().toString();
 
-    try {
-      print('SEND MESSAGE: CHAT LIST ID: $chatListId');
-      var uuid = const Uuid();
-      chatRepository.addChat(
-        ChatModel(
-          chatId: uuid.v4().toString(),
-          recepientId: recepientId,
-          chatListId: chatListId,
-          recepientUsername: recepientUsername,
-          senderId: senderId,
-          senderUsername: senderUsername,
-          mode: mode,
-          status: status,
-          message: message,
-          dateCreated: DateTime.now().toString(),
-        ),
-      );
-      retrieveChat(recepientUsername: recepientUsername);
-    } catch (e) {
-      throw Exception(e);
+    if (mode == "SENDER") {
+      channel?.sink.add(
+          '{"action": "sendPrivate", "recepientConnectionId": "$connectionId", "chatId": "$assignedChatId", "message": "$message" }');
+    }
+
+    List<ChatModel?>? existingChat =
+        await chatRepository.getChat(assignedChatId);
+
+    if (existingChat == null || existingChat.isEmpty) {
+      try {
+        // Save sending message to db
+        await chatRepository.addChat(
+          ChatModel(
+            chatId: assignedChatId,
+            recepientId: recepientId,
+            chatListId: chatListId,
+            recepientUsername: recepientUsername,
+            senderId: senderId,
+            senderUsername: senderUsername,
+            mode: mode,
+            status: status,
+            message: message,
+            dateCreated: DateTime.now().toString(),
+          ),
+        );
+        await retrieveChat(recepientUsername: recepientUsername);
+      } catch (e) {
+        throw Exception(e);
+      }
     }
   }
 

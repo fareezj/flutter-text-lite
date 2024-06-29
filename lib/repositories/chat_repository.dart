@@ -5,4 +5,5 @@ abstract class ChatRepository {
   Future<void> addChat(ChatModel chatModel);
   Future<ChatListModel?> getChatList(String recepientUsername);
   Future<List<ChatModel>?> getChats(String chatListId);
+  Future<List<ChatModel>?> getChat(String chatId);
 }

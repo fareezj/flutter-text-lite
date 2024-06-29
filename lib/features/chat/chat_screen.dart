@@ -53,17 +53,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   if (value.chatListId != null) ...[
                     Text('Chat List Id: ${value.chatListId}'),
                     ElevatedButton(
-                      onPressed: () async => value.sendMessage(
-                          connectionId: value.recepientConnectionId!,
-                          message: _messageController.text,
-                          chatListId: value.chatListId!,
-                          recepientId: value.friendRecepientModel!.userId,
-                          recepientUsername:
-                              value.friendRecepientModel!.username,
-                          senderId: value.senderUserId!,
-                          senderUsername: value.senderUsername!,
-                          mode: "SENDER",
-                          status: "SENT"),
+                      onPressed: () async => value.messageTransmission(
+                        connectionId: value.recepientConnectionId!,
+                        message: _messageController.text,
+                        chatListId: value.chatListId!,
+                        recepientId: value.friendRecepientModel!.userId,
+                        recepientUsername: value.friendRecepientModel!.username,
+                        senderId: value.senderUserId!,
+                        senderUsername: value.senderUsername!,
+                        mode: "SENDER",
+                        status: "SENT",
+                      ),
                       child: const Text('Send message'),
                     ),
                   ],
@@ -73,8 +73,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         var result = jsonDecode(snapshot.data);
-                        print(result.toString());
-                        print(snapshot.data);
                         if (result['type'] == 'connectionIdUpdate') {
                           value.recepientConnectionId = result['connectionId'];
                           value.updateFriendConnectionId(
@@ -83,6 +81,20 @@ class _ChatScreenState extends State<ChatScreen> {
                           );
                         }
                         if (result['privateMessage'] != null) {
+                          value.messageTransmission(
+                            chatId: result['chatId'],
+                            connectionId: value.recepientConnectionId!,
+                            message: result['privateMessage'],
+                            chatListId: value.chatListId!,
+                            recepientId: value.friendRecepientModel!.userId,
+                            recepientUsername:
+                                value.friendRecepientModel!.username,
+                            senderId: value.senderUserId!,
+                            senderUsername: value.senderUsername!,
+                            mode: "RECEIVER",
+                            status: "SENT",
+                          );
+
                           return Text(snapshot.hasData
                               ? 'Incoming: ' + snapshot.data
                               : '');

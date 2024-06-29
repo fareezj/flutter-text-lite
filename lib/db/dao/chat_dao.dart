@@ -58,4 +58,18 @@ class ChatDao {
       throw Exception(e);
     }
   }
+
+  Future<List<ChatModel>?> getChat(String chatId) async {
+    try {
+      List<Map<String, Object?>> result = await appDatabase.db!
+          .rawQuery('SELECT * FROM Chats WHERE chatId = ?', [chatId]);
+
+      if (result.isNotEmpty) {
+        return result.map((json) => ChatModel.fromJson(json)).toList();
+      }
+      return null;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

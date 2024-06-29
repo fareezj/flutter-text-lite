@@ -45,4 +45,13 @@ class ChatRepositoryImpl extends ChatRepository {
       throw Exception(e);
     }
   }
+
+  @override
+  Future<List<ChatModel>?> getChat(String chatId) async {
+    try {
+      return await chatDao.getChat(chatId);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
