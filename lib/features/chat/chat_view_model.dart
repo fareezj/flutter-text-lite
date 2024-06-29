@@ -69,18 +69,20 @@ class ChatViewModel extends ChangeNotifier {
 
     FriendModel? friendModel =
         await friendsRepository.getFriend(recepientUsername);
+    print('GET FRIEND RESULT: $friendModel');
     if (friendModel == null) {
       UserDetails? user =
           await getUserDetails(UserDetailsReqBody(username: recepientUsername));
-      var friendModel = FriendModel(
+      var model = FriendModel(
         userId: user.id,
         username: user.username,
         email: user.email,
         connectionId: user.connectionId ?? '',
         lastWebsocketUpdate: DateTime.now().toString(),
       );
-      await friendsRepository.insertFriend(friendModel);
-      friendRecepientModel = friendModel;
+      await friendsRepository.insertFriend(model);
+      recepientConnectionId = model.connectionId;
+      friendRecepientModel = model;
       notifyListeners();
     } else {
       print('Getting User Details from Local DB');
@@ -102,7 +104,7 @@ class ChatViewModel extends ChangeNotifier {
         await chatRepository.addNewChatList(
           ChatListModel(
               chatListId: id,
-              recepientId: friendModel!.userId,
+              recepientId: friendRecepientModel!.userId,
               recepientUsername: recepientUsername,
               senderId: senderUserId!,
               senderUsername: senderUsername!),
